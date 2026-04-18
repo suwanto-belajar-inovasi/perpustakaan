@@ -11,126 +11,180 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Mencegah seleksi teks sebagai bagian anti-copass */
-        body { user-select: none; -webkit-user-select: none; }
-        .glass-effect { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        body { user-select: none; -webkit-user-select: none; scroll-behavior: smooth; }
+        .glass-effect { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
 
-    <nav class="glass-effect fixed w-full z-50 shadow-sm border-b border-green-100">
+    <nav class="glass-effect fixed w-full z-50 border-b border-green-200 shadow-sm transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <img src="https://drive.google.com/uc?export=view&id=ID_FILE_LOGO_DRIVE_ANDA" alt="Logo" class="h-10 w-10 mr-2 rounded-full" onerror="this.src='https://placehold.co/100x100?text=MIS'">
-                    <span class="font-bold text-xl text-green-700">PerpusMIS</span>
+                <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="https://drive.google.com/uc?export=view&id=ID_FILE_LOGO_DRIVE_ANDA" alt="Logo" class="h-10 w-10 mr-3 rounded-full border-2 border-green-500" onerror="this.src='https://placehold.co/100x100/16a34a/white?text=MIS'">
+                    <span class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-700 to-emerald-500">PerpusMIS</span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button onclick="bacaTanpaAkun()" class="text-sm font-medium text-gray-500 hover:text-green-600">Baca Langsung</button>
-                    <button onclick="bukaModalDaftar()" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition">Daftar Anggota</button>
-                </div>
+                <div class="flex items-center space-x-2 md:space-x-4" id="nav-menu">
+                    </div>
             </div>
         </div>
     </nav>
 
-    <div class="pt-24 pb-8 bg-gradient-to-r from-green-500 to-emerald-700 text-white text-center">
-        <h1 class="text-3xl md:text-5xl font-bold mb-4">Jelajahi Dunia Lewat Layar</h1>
-        <p class="text-lg mb-6">Ribuan ensiklopedia, komik, dan video menanti di MIS Baiturrahman.</p>
-        
-        <div class="flex justify-center gap-6 text-sm">
-            <div class="bg-white/20 px-4 py-2 rounded-lg">
-                <i class="fa-solid fa-users"></i> Total Kunjungan: <span id="total-visitor" class="font-bold">...</span>
-            </div>
-            <div class="bg-yellow-400/90 text-green-900 px-4 py-2 rounded-lg animate-pulse">
-                <i class="fa-solid fa-eye"></i> Sedang Aktif: <span id="active-visitor" class="font-bold">...</span> user
+    <div class="pt-28 pb-12 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 text-white text-center shadow-inner relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 animate-fade-in-down">Ruang Baca & Karya</h1>
+            <p class="text-lg md:text-xl mb-8 font-light max-w-2xl mx-auto px-4">Jelajahi ribuan ensiklopedia, tonton video edukasi, atau bagikan karyamu kepada teman-teman di MIS Baiturrahman.</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 text-sm font-medium">
+                <div class="bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-full shadow-lg border border-white/30">
+                    <i class="fa-solid fa-users mr-2"></i> Total Kunjungan: <span id="total-visitor" class="font-bold text-yellow-300">...</span>
+                </div>
+                <div class="bg-yellow-400 text-green-900 px-5 py-2.5 rounded-full shadow-lg font-bold animate-bounce">
+                    <i class="fa-solid fa-bolt mr-1"></i> <span id="active-visitor">...</span> Membaca Sekarang
+                </div>
             </div>
         </div>
     </div>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="flex flex-wrap justify-center gap-3 mb-10">
-            <button onclick="renderKatalog('Semua')" class="px-5 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 font-semibold">Semua</button>
-            <button onclick="renderKatalog('Ensiklopedia')" class="px-5 py-2 rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 font-semibold">Ensiklopedia</button>
-            <button onclick="renderKatalog('Komik')" class="px-5 py-2 rounded-full bg-orange-100 text-orange-800 hover:bg-orange-200 font-semibold">Komik Online</button>
-            <button onclick="renderKatalog('Video')" class="px-5 py-2 rounded-full bg-red-100 text-red-800 hover:bg-red-200 font-semibold">Video Belajar</button>
-            <button onclick="renderKatalog('Eksperimen')" class="px-5 py-2 rounded-full bg-purple-100 text-purple-800 hover:bg-purple-200 font-semibold">Eksperimen</button>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <div class="flex flex-wrap justify-center gap-3 mb-10 border-b pb-6">
+            <button onclick="renderKatalog('Semua')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white font-semibold transition shadow-sm">Semua</button>
+            <button onclick="renderKatalog('Ensiklopedia')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-blue-500 hover:text-white font-semibold transition shadow-sm">Ensiklopedia</button>
+            <button onclick="renderKatalog('Komik')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-orange-500 hover:text-white font-semibold transition shadow-sm">Komik</button>
+            <button onclick="renderKatalog('Video')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-500 hover:text-white font-semibold transition shadow-sm">Video</button>
+            <button onclick="renderKatalog('Eksperimen')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-purple-500 hover:text-white font-semibold transition shadow-sm">Eksperimen</button>
         </div>
 
-        <div id="katalog-container" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div id="user-dashboard" class="hidden mb-8 p-4 bg-green-50 rounded-xl border border-green-200 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold text-green-800">Halo, <span id="user-name-display"></span>!</h2>
+                <p class="text-sm text-green-600">Selamat datang kembali di PerpusMIS.</p>
+            </div>
+            <button onclick="bukaModalUpload()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-700">
+                <i class="fa-solid fa-plus mr-1"></i> Tambah Konten
+            </button>
+        </div>
+
+        <div id="katalog-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             <div class="col-span-full text-center text-gray-500 py-10">
-                <i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i>
-                <p>Memuat koleksi perpustakaan...</p>
+                <i class="fa-solid fa-spinner fa-spin text-4xl mb-4 text-green-500"></i>
+                <p class="font-medium">Memuat koleksi ajaib...</p>
             </div>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-white py-8 mt-12 text-center">
-        <p class="mb-2">Hak Cipta &copy; 2026 Perpustakaan Digital MIS Baiturrahman.</p>
-        <p class="text-sm text-gray-400">Powered by <span class="text-green-400 font-bold hover:text-green-300 cursor-pointer">Belajar Inovasi</span> - Solusi IT Pendidikan Nusantara.</p>
+    <footer class="bg-slate-900 text-white py-8 mt-12 text-center border-t-4 border-green-500">
+        <p class="mb-2 font-medium">Hak Cipta &copy; 2026 Perpustakaan Digital MIS Baiturrahman.</p>
+        <p class="text-sm text-gray-400">Powered by <span class="text-green-400 font-bold hover:text-white transition cursor-pointer">Belajar Inovasi</span></p>
     </footer>
 
     <script>
-        // GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1YpdwyjVgznl-ocJgXdbtnL8MTdNJpyAiyJq3CQTsn9_PfhZ4htq3INmGHx5OOA1x/exec'; 
+        // MASUKKAN URL WEB APP ANDA DI SINI
+        const APPS_SCRIPT_URL = 'URL_WEB_APP_ANDA_DISINI'; 
         let globalBooks = [];
+        let currentUser = null; // { nama: '', role: '' }
 
-        // --- Fitur Anti Cheating / Inspect Element ---
-        document.addEventListener('contextmenu', event => event.preventDefault()); // Disable klik kanan
+        // Anti Cheating
+        document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            if(e.keyCode == 123) { return false; } // F12
-            if(e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) { return false; }
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && ['I','C','J'].includes(String.fromCharCode(e.keyCode))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) return false;
         };
 
-        // --- Fetch Data Awal ---
         window.onload = async () => {
-            // Log Kunjungan
-            fetch(`${APPS_SCRIPT_URL}?action=log_visit&user=Visitor`)
-                .then(res => res.json())
-                .then(data => updateStatistik(data));
+            cekLoginStatus();
+            fetchDataAwal();
+        };
 
-            // Ambil Katalog
+        function cekLoginStatus() {
+            const savedUser = localStorage.getItem('perpusUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+            renderNavbar();
+            renderDashboard();
+        }
+
+        async function fetchDataAwal() {
+            let uName = currentUser ? currentUser.nama : 'Guest';
+            fetch(`${APPS_SCRIPT_URL}?action=log_visit&user=${uName}`)
+                .then(res => res.json()).then(data => updateStatistik(data));
+
             try {
                 const response = await fetch(`${APPS_SCRIPT_URL}?action=get_data`);
                 const data = await response.json();
                 globalBooks = data.buku;
                 renderKatalog('Semua');
-                
-                // Pop-up Notif User Aktif
-                Swal.fire({
-                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
-                    icon: 'info', title: `Ada ${data.statistik.aktif} pengguna lain sedang membaca!`
-                });
             } catch (error) {
-                document.getElementById('katalog-container').innerHTML = `<p class="col-span-full text-center text-red-500">Gagal memuat data. Periksa koneksi.</p>`;
+                document.getElementById('katalog-container').innerHTML = `<p class="col-span-full text-center text-red-500">Koneksi terputus. Silakan muat ulang halaman.</p>`;
             }
-        };
+        }
 
         function updateStatistik(stats) {
             document.getElementById('total-visitor').innerText = stats.total;
             document.getElementById('active-visitor').innerText = stats.aktif;
         }
 
+        function renderNavbar() {
+            const navMenu = document.getElementById('nav-menu');
+            if (!currentUser) {
+                navMenu.innerHTML = `
+                    <button onclick="bukaModalLogin()" class="text-sm font-bold text-gray-600 hover:text-green-600 mr-2">Login</button>
+                    <button onclick="bukaModalDaftar()" class="bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-green-700 shadow-md transition transform hover:scale-105">Daftar</button>
+                `;
+            } else {
+                navMenu.innerHTML = `
+                    <span class="hidden md:inline-block text-sm font-bold text-green-700 bg-green-100 px-3 py-1 rounded-full mr-2"><i class="fa-solid fa-user-circle mr-1"></i> ${currentUser.nama}</span>
+                    <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-red-600 shadow-md transition">Logout</button>
+                `;
+            }
+        }
+
+        function renderDashboard() {
+            const dashboard = document.getElementById('user-dashboard');
+            if (currentUser) {
+                dashboard.classList.remove('hidden');
+                document.getElementById('user-name-display').innerText = currentUser.nama;
+            } else {
+                dashboard.classList.add('hidden');
+            }
+        }
+
         function renderKatalog(kategori) {
             const container = document.getElementById('katalog-container');
             container.innerHTML = '';
-            
             const filtered = kategori === 'Semua' ? globalBooks : globalBooks.filter(b => b.Kategori === kategori);
             
             filtered.forEach(buku => {
                 const isVideo = buku.Tipe === 'YouTube';
-                const icon = isVideo ? '<i class="fa-brands fa-youtube text-red-500"></i>' : '<i class="fa-solid fa-book text-green-500"></i>';
+                const icon = isVideo ? '<i class="fa-brands fa-youtube text-red-500"></i>' : '<i class="fa-solid fa-book-open text-blue-500"></i>';
                 
+                // Cek Role Admin untuk tombol hapus
+                const btnHapus = (currentUser && currentUser.role === 'Admin') ? 
+                    `<button onclick="hapusBuku('${buku.ID_Buku}')" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-600 z-10"><i class="fa-solid fa-trash"></i></button>` : '';
+
                 container.innerHTML += `
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 transform hover:-translate-y-1 cursor-pointer" onclick="bacaBuku('${buku.Link_Konten_Buku_Video}', '${buku.Tipe}')">
-                        <img class="h-48 w-full object-cover" src="${buku.Link_Cover}" alt="${buku.Judul}">
-                        <div class="p-4">
-                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-50 last:mr-0 mr-1">
-                                ${buku.Kategori}
-                            </span>
-                            <h3 class="mt-2 text-md leading-tight font-bold text-gray-900">${buku.Judul}</h3>
-                            <div class="mt-3 flex items-center text-sm text-gray-500">
-                                ${icon} <span class="ml-2">${buku.Tipe}</span>
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover relative group flex flex-col h-full">
+                        ${btnHapus}
+                        <div class="relative cursor-pointer overflow-hidden" onclick="bacaBuku('${buku.Link_Konten_Buku_Video}', '${buku.Tipe}')">
+                            <img class="h-48 w-full object-cover transition duration-500 group-hover:scale-110" src="${buku.Link_Cover}" alt="${buku.Judul}">
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                <span class="bg-white text-gray-900 font-bold py-2 px-4 rounded-full shadow-lg">${isVideo ? 'Tonton' : 'Baca'} Sekarang</span>
+                            </div>
+                        </div>
+                        <div class="p-5 flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold py-1 px-2 uppercase rounded-md text-green-700 bg-green-100">${buku.Kategori}</span>
+                                <span class="text-xs text-gray-400"><i class="fa-solid fa-upload"></i> ${buku.Uploader}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 leading-tight mb-4 flex-grow">${buku.Judul}</h3>
+                            <div class="flex justify-between items-center border-t pt-3 mt-auto">
+                                <div class="text-sm font-medium text-gray-600">${icon} ${buku.Tipe}</div>
+                                <button onclick="likeBuku('${buku.ID_Buku}', this)" class="text-gray-400 hover:text-red-500 transition">
+                                    <i class="fa-solid fa-heart mr-1"></i> <span class="font-bold text-gray-600">${buku.Likes || 0}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -138,43 +192,140 @@
             });
         }
 
-        function bukaModalDaftar() {
+        // --- AUTH & ACTIONS ---
+
+        function bukaModalLogin() {
             Swal.fire({
-                title: 'Daftar Anggota Perpus',
+                title: 'Masuk PerpusMIS',
                 html: `
-                    <input id="swal-nama" class="swal2-input" placeholder="Nama Lengkap Anak">
-                    <input id="swal-nowa" type="number" class="swal2-input" placeholder="No WhatsApp (08xxx)">
+                    <input id="login-wa" type="number" class="swal2-input" placeholder="No WhatsApp">
+                    <input id="login-pin" type="password" class="swal2-input" placeholder="PIN (6 Digit)">
                 `,
-                confirmButtonText: 'Daftar Sekarang',
+                confirmButtonText: 'Masuk',
                 confirmButtonColor: '#16a34a',
                 preConfirm: () => {
-                    const nama = document.getElementById('swal-nama').value;
-                    const nowa = document.getElementById('swal-nowa').value;
-                    if (!nama || !nowa) { Swal.showValidationMessage('Nama dan WA wajib diisi!'); }
-                    return { nama, nowa };
+                    const nowa = document.getElementById('login-wa').value;
+                    const pin = document.getElementById('login-pin').value;
+                    if (!nowa || !pin) Swal.showValidationMessage('Semua kolom wajib diisi!');
+                    return { nowa, pin };
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({ title: 'Mendaftarkan...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-                    
-                    fetch(`${APPS_SCRIPT_URL}?action=register&nama=${result.value.nama}&nowa=${result.value.nowa}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            Swal.fire('Berhasil!', 'Cek WhatsApp Anda untuk notifikasi pendaftaran.', 'success');
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    Swal.fire({ title: 'Memeriksa...', didOpen: () => Swal.showLoading() });
+                    fetch(`${APPS_SCRIPT_URL}?action=login&nowa=${res.value.nowa}&pin=${res.value.pin}`)
+                        .then(r => r.json()).then(data => {
+                            if (data.success) {
+                                currentUser = { nama: data.nama, role: data.role };
+                                localStorage.setItem('perpusUser', JSON.stringify(currentUser));
+                                Swal.fire('Berhasil', `Selamat datang, ${data.nama}!`, 'success').then(() => location.reload());
+                            } else {
+                                Swal.fire('Gagal', data.message, 'error');
+                            }
                         });
                 }
             });
         }
 
-        function bacaTanpaAkun() {
-            Swal.fire('Akses Tamu', 'Anda masuk sebagai Tamu. Silakan menjelajah katalog.', 'success');
+        function bukaModalDaftar() {
+            Swal.fire({
+                title: 'Daftar Anggota',
+                html: `
+                    <input id="reg-nama" class="swal2-input" placeholder="Nama Lengkap">
+                    <input id="reg-wa" type="number" class="swal2-input" placeholder="No WhatsApp Aktif">
+                    <input id="reg-pin" type="password" class="swal2-input" placeholder="Buat PIN Rahasia (Angka)">
+                `,
+                confirmButtonText: 'Daftar',
+                confirmButtonColor: '#16a34a',
+                preConfirm: () => {
+                    const nama = document.getElementById('reg-nama').value;
+                    const nowa = document.getElementById('reg-wa').value;
+                    const pin = document.getElementById('reg-pin').value;
+                    if (!nama || !nowa || !pin) Swal.showValidationMessage('Lengkapi semua data!');
+                    return { nama, nowa, pin };
+                }
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    Swal.fire({ title: 'Mendaftarkan...', didOpen: () => Swal.showLoading() });
+                    fetch(`${APPS_SCRIPT_URL}?action=register&nama=${res.value.nama}&nowa=${res.value.nowa}&pin=${res.value.pin}`)
+                        .then(r => r.json()).then(data => {
+                            if(data.success) Swal.fire('Berhasil!', 'Akun siap digunakan. Silakan Login.', 'success');
+                            else Swal.fire('Gagal', data.message, 'error');
+                        });
+                }
+            });
+        }
+
+        function bukaModalUpload() {
+            Swal.fire({
+                title: 'Tambah Koleksi',
+                html: `
+                    <select id="up-kat" class="swal2-input"><option value="Ensiklopedia">Ensiklopedia</option><option value="Komik">Komik</option><option value="Video">Video Edukasi</option><option value="Eksperimen">Eksperimen</option></select>
+                    <select id="up-tipe" class="swal2-input"><option value="PDF">Dokumen (PDF/Drive)</option><option value="YouTube">Link YouTube</option></select>
+                    <input id="up-judul" class="swal2-input" placeholder="Judul Buku/Video">
+                    <input id="up-cover" class="swal2-input" placeholder="Link Gambar Cover (Drive/Web)">
+                    <input id="up-link" class="swal2-input" placeholder="Link Konten (Drive URL / YouTube URL)">
+                `,
+                confirmButtonText: 'Upload',
+                confirmButtonColor: '#16a34a',
+                preConfirm: () => {
+                    return {
+                        kategori: document.getElementById('up-kat').value,
+                        tipe: document.getElementById('up-tipe').value,
+                        judul: document.getElementById('up-judul').value,
+                        cover: document.getElementById('up-cover').value,
+                        link: document.getElementById('up-link').value,
+                        uploader: currentUser.nama
+                    }
+                }
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    const p = res.value;
+                    if(!p.judul || !p.cover || !p.link) return Swal.fire('Gagal', 'Semua form harus diisi!', 'error');
+                    
+                    Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                    fetch(`${APPS_SCRIPT_URL}?action=add_book&kategori=${p.kategori}&tipe=${p.tipe}&judul=${p.judul}&cover=${p.cover}&link=${p.link}&uploader=${p.uploader}`)
+                        .then(r => r.json()).then(data => {
+                            Swal.fire('Berhasil', 'Konten ditambahkan ke Perpus!', 'success').then(() => fetchDataAwal());
+                        });
+                }
+            });
+        }
+
+        function hapusBuku(id) {
+            Swal.fire({
+                title: 'Hapus konten ini?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, Hapus!'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    fetch(`${APPS_SCRIPT_URL}?action=delete_book&id=${id}`)
+                        .then(r => r.json()).then(() => fetchDataAwal());
+                }
+            });
+        }
+
+        function likeBuku(id, btn) {
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+            fetch(`${APPS_SCRIPT_URL}?action=like_book&id=${id}`)
+                .then(r => r.json()).then(data => {
+                    if(data.success) {
+                        btn.innerHTML = `<i class="fa-solid fa-heart text-red-500 mr-1"></i> <span class="font-bold text-red-500">${data.likes}</span>`;
+                    }
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem('perpusUser');
+            currentUser = null;
+            location.reload();
         }
 
         function bacaBuku(link, tipe) {
+            if (link === '#') {
+                Swal.fire('Ops!', 'Ini adalah konten demonstrasi.', 'info'); return;
+            }
             if (tipe === 'YouTube') {
-                Swal.fire({ html: `<iframe width="100%" height="315" src="${link}" frameborder="0" allowfullscreen></iframe>`, width: 600, showConfirmButton: false });
+                Swal.fire({ html: `<iframe width="100%" height="315" src="${link}" frameborder="0" allowfullscreen class="rounded-lg"></iframe>`, width: 600, showConfirmButton: false });
             } else {
-                window.open(link, '_blank'); // Buka PDF di tab baru
+                window.open(link, '_blank');
             }
         }
     </script>
